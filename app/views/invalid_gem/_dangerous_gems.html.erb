@@ -1,0 +1,20 @@
+<h2>Dangerous Gems</h2>
+
+<table>
+  <thead>
+    <th>Name</th>
+    <th>Version</th>
+    <th>Released at</th>
+    <th>Github</th>
+  </thead>
+  <tbody>
+    <% gems.each do |_gem| %>
+      <tr>
+        <td><%= link_to _gem[0], rubygems_org_url(gem_name: _gem[0], version: _gem[1]), {target: "_blank"} %></td>
+        <td><%= _gem[1] %></td>
+        <td><%= _gem[2] %></td>
+        <td><%= link_to_if _gem[3], "Link", _gem[3], {target: "_blank"} %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

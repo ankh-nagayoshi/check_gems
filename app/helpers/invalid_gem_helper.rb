@@ -1,0 +1,2 @@
+module InvalidGemHelper
+end

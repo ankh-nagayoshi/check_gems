@@ -1,0 +1,11 @@
+<h2>Upload list</h2>
+<%= link_to "by_lockfile", invalid_gem_by_lockfile_path %>
+
+<%= form_tag(invalid_gem_by_list_path, multipart: true, method: :post) do %>
+  <div>
+    <%= text_area_tag "gemlist", "", style: "width: 500px; height: 300px;" %>
+  </div>
+  <%= submit_tag "send" %>
+<% end %>
+
+<%= render "dangerous_gems", gems: @dangerous_gems %>

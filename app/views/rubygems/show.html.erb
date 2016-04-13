@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @rubygem.name %></h1>
+
+<h2>Gem Info</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <td><%= @rubygem.name %></td>
+  </tr>
+  <tr>
+    <th>Downloads</th>
+    <td><%= @rubygem.downloads %></td>
+  </tr>
+  <tr>
+    <th>Slug</th>
+    <td><%= @rubygem.slug %></td>
+  </tr>
+</table>
+
+<h2>Versions</h2>
+
+<table>
+  <% @rubygem.versions.each do |version| %>
+    <tr><td><%= version.number %></td></tr>
+  <% end %>
+</table>
