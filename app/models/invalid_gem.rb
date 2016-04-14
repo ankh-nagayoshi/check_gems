@@ -1,12 +1,12 @@
 class InvalidGem
   def self.by_lockfile(parsed_lockfile)
-    included_dash_gems = parsed_lockfile.specs.select {|s| include_dash?(s.name)}.map {|s| [s.name, s.version.to_s]}
-    
+    included_dash_gemspecs = parsed_lockfile.specs.select {|s| include_dash?(s.name)}
+    included_dash_gems = included_dash_gemspecs.map {|s| [s.name, s.version.to_s]}
     select_dengerous_versions(included_dash_gems)
   end
   
   def self.by_list(gemlist)
-    included_dash_gems = gemlist.select {|(g, v)| include_dash?(g)}
+    included_dash_gems = gemlist.select {|(g, _)| include_dash?(g)}
     select_dengerous_versions(included_dash_gems)
   end
   
@@ -16,14 +16,11 @@ class InvalidGem
     end
     
     def self.select_dengerous_versions(gemlist)
-      gemlist.map do |(name, number)|
-        gems = Rubygem.where(name: name)
-        return false if gems.blank?
-        
-        raise "multiple gems -> #{name}" if gems.count > 1
-        
-        gem = gems.first
-        versions = gem.versions.where(number: number)
+      gemsets = gemlist.map {|(na, nu)| [Rubygem.where(name: na), nu]}
+      gemsets = gemsets.reject {|(g, _)| g.blank? || g.count > 1}
+      gemsets = gemsets.map {|(g, n)| [g.first, n]}
+      gemsets.map do |(_gem, number)|
+        versions = _gem.versions.where(number: number)
         
         version = case
         when versions.count == 1
@@ -35,7 +32,7 @@ class InvalidGem
         end
         
         if version.try(:dangerous?)
-          [name, number, version.created_at, gem.linkset.try(:github)]
+          [_gem.name, number, version.created_at, _gem.linkset.try(:github)]
         else
           nil
         end
